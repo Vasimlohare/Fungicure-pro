@@ -1,0 +1,1161 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --p:#0F766E;--s:#14B8A6;--a:#22C55E;--bg:#F8FAFC;--dark:#0f172a;
+  --gray:#64748b;--light:#e2e8f0;--white:#fff;--text:#1e293b;
+  --fs:1rem
+}
+html{scroll-behavior:smooth;font-size:var(--fs)}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ZOOM CONTROLS */
+.zoom-bar{position:fixed;bottom:1.5rem;right:1rem;z-index:800;display:flex;flex-direction:column;gap:.4rem}
+.zoom-bar button{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;font-size:1.2rem;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:.2s}
+.zoom-bar .zin{background:var(--p);color:#fff}
+.zoom-bar .zout{background:#fff;color:var(--p);border:2px solid var(--p)}
+.zoom-bar .zin:hover{background:#0d6560}
+.zoom-bar .zout:hover{background:var(--bg)}
+.zoom-label{font-size:.65rem;text-align:center;color:var(--gray);font-weight:600}
+
+/* LANGUAGE SWITCH */
+.lang-bar{position:fixed;top:.7rem;right:.7rem;z-index:900;display:flex;gap:.3rem;align-items:center;background:rgba(255,255,255,.92);border-radius:50px;padding:.25rem .5rem;border:1.5px solid var(--light);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.lang-btn{border:none;background:none;padding:.25rem .65rem;border-radius:50px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;color:var(--gray)}
+.lang-btn.active{background:var(--p);color:#fff}
+
+/* NAV */
+nav{background:var(--white);box-shadow:0 1px 12px rgba(0,0,0,.07);position:sticky;top:0;z-index:200;padding:0 clamp(.8rem,3vw,2rem)}
+.nav-inner{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:.8rem}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-img{width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--s)}
+.logo-text{font-size:clamp(.9rem,2vw,1.2rem);font-weight:700;color:var(--p);white-space:nowrap}
+.nav-links{display:flex;gap:clamp(.5rem,1.5vw,1.2rem);list-style:none}
+.nav-links a{text-decoration:none;color:var(--gray);font-size:.85rem;font-weight:500;transition:.2s;white-space:nowrap;padding:.3rem .4rem;border-radius:8px}
+.nav-links a:hover{color:var(--p);background:rgba(15,118,110,.06)}
+.nav-right{display:flex;gap:.5rem;align-items:center;flex-shrink:0}
+.cart-btn{background:var(--p);color:#fff;border:none;padding:.42rem .9rem;border-radius:50px;cursor:pointer;font-weight:600;font-size:.8rem;display:flex;align-items:center;gap:4px;transition:.2s;white-space:nowrap}
+.cart-btn:hover{background:#0d6560;transform:scale(1.04)}
+.admin-btn{background:var(--dark);color:#fff;border:none;padding:.42rem .85rem;border-radius:50px;cursor:pointer;font-weight:600;font-size:.76rem;transition:.2s;white-space:nowrap}
+.admin-btn:hover{background:#1e293b}
+.cart-count{background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;font-size:.62rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.hamburger{display:none;background:none;border:1.5px solid var(--light);border-radius:8px;padding:.35rem .55rem;cursor:pointer;font-size:1rem}
+
+/* SCROLL ANIMATION */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-30px);transition:opacity .6s ease,transform .6s ease}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(30px);transition:opacity .6s ease,transform .6s ease}
+.reveal-right.visible{opacity:1;transform:none}
+
+.sec{padding:clamp(2.5rem,6vw,4.5rem) clamp(1rem,3vw,2rem)}
+.container{max-width:1200px;margin:auto}
+.sec-title{text-align:center;margin-bottom:2.5rem}
+.sec-title h2{font-size:clamp(1.4rem,3vw,2.1rem);font-weight:700;color:var(--dark);margin-bottom:.4rem}
+.sec-title p{color:var(--gray);font-size:.92rem}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#065f46 0%,#0F766E 40%,#0d9488 70%,#0891b2 100%);color:#fff;padding:clamp(3rem,8vw,6rem) clamp(1rem,3vw,2rem);text-align:center;position:relative;overflow:hidden}
+.hero-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.05)}
+.hero-blob.b1{width:350px;height:350px;top:-80px;right:-80px;animation:pulse 4s ease-in-out infinite}
+.hero-blob.b2{width:220px;height:220px;bottom:-60px;left:-50px;animation:pulse 5s ease-in-out infinite .5s}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:50px;padding:.3rem 1rem;font-size:.76rem;font-weight:600;margin-bottom:1.2rem}
+.hero h1{font-size:clamp(1.7rem,4.5vw,3rem);font-weight:800;line-height:1.2;margin-bottom:1rem;position:relative;z-index:1}
+.hero h1 em{color:#a7f3d0;font-style:normal}
+.hero p{font-size:clamp(.88rem,2vw,1.05rem);opacity:.9;max-width:560px;margin:0 auto 2rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-w{background:#fff;color:var(--p);border:none;padding:.78rem clamp(1.2rem,3vw,1.8rem);border-radius:50px;cursor:pointer;font-weight:700;font-size:.88rem;transition:.2s}
+.btn-w:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.btn-o{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);padding:.78rem clamp(1.2rem,3vw,1.8rem);border-radius:50px;cursor:pointer;font-weight:600;font-size:.88rem;transition:.2s}
+.btn-o:hover{background:rgba(255,255,255,.12)}
+.hero-stats{display:flex;gap:clamp(1rem,4vw,3rem);justify-content:center;margin-top:3rem;flex-wrap:wrap;z-index:1;position:relative}
+.stat-num{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800}
+.stat-label{font-size:.75rem;opacity:.8;margin-top:2px}
+
+/* TRUST */
+.trust{background:#fff;padding:1.1rem clamp(1rem,3vw,2rem);border-bottom:1px solid var(--light)}
+.trust-inner{max-width:1200px;margin:auto;display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;align-items:center}
+.badge-t{display:flex;align-items:center;gap:.45rem;color:var(--gray);font-size:.8rem;font-weight:500;transition:.2s;padding:.2rem .5rem;border-radius:8px}
+.badge-t:hover{background:rgba(15,118,110,.06);color:var(--p);transform:scale(1.04)}
+.badge-icon{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#e6fffa,#b2f5ea);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.1rem}
+.feat-card{background:#fff;border-radius:16px;padding:1.3rem;border:1px solid var(--light);transition:.3s;text-align:center;cursor:default}
+.feat-card:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(15,118,110,.11);border-color:var(--s)}
+.feat-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#e6fffa,#b2f5ea);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto .9rem;transition:.3s}
+.feat-card:hover .feat-icon{transform:scale(1.12) rotate(-4deg)}
+.feat-card h3{font-size:.92rem;font-weight:700;color:var(--dark);margin-bottom:.28rem}
+.feat-card p{font-size:.8rem;color:var(--gray);line-height:1.6}
+
+/* PRODUCTS */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem}
+.prod-card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid var(--light);transition:.35s;display:flex;flex-direction:column}
+.prod-card:hover{transform:translateY(-7px);box-shadow:0 22px 44px rgba(15,118,110,.13)}
+.prod-img{background:linear-gradient(155deg,#e6fffa 0%,#d1fae5 60%,#ccfbf1 100%);min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;padding:1.2rem}
+.bottle-wrap{display:flex;gap:5px;align-items:flex-end;justify-content:center}
+.bottle-svg{width:65px;filter:drop-shadow(0 5px 10px rgba(0,0,0,.12));transition:.3s}
+.prod-card:hover .bottle-svg{transform:translateY(-5px) scale(1.04)}
+.prod-badge{position:absolute;top:11px;left:11px;background:var(--a);color:#fff;font-size:.66rem;font-weight:700;padding:.2rem .6rem;border-radius:50px}
+.free-ship{position:absolute;bottom:9px;right:9px;background:rgba(15,118,110,.88);color:#fff;font-size:.64rem;font-weight:700;padding:.2rem .6rem;border-radius:50px}
+.prod-info{padding:1.1rem;flex:1;display:flex;flex-direction:column}
+.prod-name{font-size:.95rem;font-weight:700;color:var(--dark);margin-bottom:.22rem}
+.prod-desc{font-size:.78rem;color:var(--gray);margin-bottom:.65rem;line-height:1.5;flex:1}
+.prod-price{font-size:1.35rem;font-weight:800;color:var(--p);margin-bottom:.75rem}
+.prod-price s{font-size:.8rem;color:var(--gray);font-weight:400;margin-left:.3rem}
+.add-btn{width:100%;background:var(--p);color:#fff;border:none;padding:.68rem;border-radius:10px;cursor:pointer;font-weight:600;font-size:.86rem;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.35rem}
+.add-btn:hover{background:#0d6560;transform:scale(1.02)}
+
+/* HOW */
+.steps-row{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+.step{text-align:center;flex:1;min-width:145px;max-width:200px}
+.step-num{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--s));color:#fff;font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;transition:.3s}
+.step:hover .step-num{transform:scale(1.12) rotate(5deg)}
+.step h3{font-size:.9rem;font-weight:700;margin-bottom:.28rem;color:var(--dark)}
+.step p{font-size:.78rem;color:var(--gray);line-height:1.6}
+
+/* REVIEWS */
+.review-form-area{background:linear-gradient(135deg,#f0fdfa,#ecfdf5);border-radius:20px;padding:1.8rem;margin-bottom:2.2rem;border:1px solid #d1fae5}
+.review-form-area h3{font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:1rem}
+.star-pick{display:flex;gap:.35rem;margin-bottom:.75rem;font-size:1.7rem;cursor:pointer}
+.star-pick span{color:#d1d5db;transition:.2s;user-select:none}
+.star-pick span.active{color:#f59e0b;transform:scale(1.15)}
+.rev-form{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.rev-inp{background:#fff;border:1.5px solid var(--light);border-radius:10px;padding:.62rem .9rem;font-size:.86rem;outline:none;font-family:inherit;transition:.2s;width:100%}
+.rev-inp:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(20,184,166,.12)}
+.rev-ta{grid-column:1/-1;resize:none}
+.rev-submit{background:var(--p);color:#fff;border:none;padding:.72rem 1.8rem;border-radius:50px;cursor:pointer;font-weight:700;font-size:.88rem;transition:.2s;grid-column:1/-1;justify-self:start}
+.rev-submit:hover{background:#0d6560;transform:scale(1.03)}
+.reviews-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem}
+.rev-card{background:#fff;border-radius:16px;padding:1.2rem;border:1px solid var(--light);transition:.25s}
+.rev-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,118,110,.09)}
+.rev-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.75rem}
+.rev-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--s));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.rev-name{font-weight:700;font-size:.88rem;color:var(--dark)}
+.rev-loc{font-size:.7rem;color:var(--gray)}
+.rev-stars{color:#f59e0b;font-size:.8rem;margin-bottom:.35rem}
+.rev-text{font-size:.81rem;color:#475569;line-height:1.7;font-style:italic}
+.rev-date{font-size:.7rem;color:var(--gray);margin-top:.35rem}
+
+/* INFO */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:.9rem}
+.info-card{background:var(--bg);border-radius:12px;padding:1rem;border-left:4px solid var(--s);transition:.25s}
+.info-card:hover{background:#fff;transform:translateX(4px)}
+.info-card h4{font-size:.86rem;font-weight:700;color:var(--p);margin-bottom:.32rem}
+.info-card p{font-size:.77rem;color:var(--gray);line-height:1.6}
+
+/* CAREERS */
+.careers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.3rem}
+.job-card{background:#fff;border-radius:18px;padding:1.4rem;border:1px solid var(--light);transition:.3s;position:relative;overflow:hidden}
+.job-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--p),var(--s))}
+.job-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(15,118,110,.12)}
+.job-badge{display:inline-flex;align-items:center;gap:.3rem;background:#f0fdf4;color:#166534;font-size:.68rem;font-weight:700;padding:.22rem .65rem;border-radius:50px;margin-bottom:.8rem;border:1px solid #bbf7d0}
+.job-title{font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:.3rem}
+.job-type{font-size:.78rem;color:var(--p);font-weight:600;margin-bottom:.6rem}
+.job-desc{font-size:.8rem;color:var(--gray);line-height:1.65;margin-bottom:1rem}
+.job-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.job-tag{background:var(--bg);border:1px solid var(--light);color:var(--gray);font-size:.7rem;padding:.2rem .55rem;border-radius:50px}
+.apply-btn{background:var(--p);color:#fff;border:none;padding:.6rem 1.4rem;border-radius:50px;cursor:pointer;font-weight:600;font-size:.82rem;transition:.2s}
+.apply-btn:hover{background:#0d6560;transform:scale(1.03)}
+
+/* FAQ */
+.faq-item{background:#fff;border-radius:12px;margin-bottom:.65rem;border:1px solid var(--light);overflow:hidden;transition:.2s}
+.faq-item:hover{border-color:var(--s)}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:.95rem 1.1rem;font-size:.88rem;font-weight:600;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;transition:.2s}
+.faq-a{padding:0 1.1rem;font-size:.82rem;color:var(--gray);line-height:1.7;max-height:0;overflow:hidden;transition:.35s}
+.faq-a.open{max-height:260px;padding-bottom:.85rem}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:2.5rem;align-items:start}
+.contact-info h3{font-size:1.35rem;font-weight:700;margin-bottom:.75rem;color:var(--dark)}
+.contact-info p{color:var(--gray);font-size:.88rem;line-height:1.7;margin-bottom:1.1rem}
+.c-detail{display:flex;align-items:center;gap:.65rem;margin-bottom:.75rem;font-size:.86rem;color:var(--gray);transition:.2s;padding:.2rem;border-radius:8px}
+.c-detail:hover{color:var(--p);background:rgba(15,118,110,.05)}
+.c-icon{width:32px;height:32px;background:linear-gradient(135deg,#e6fffa,#b2f5ea);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.c-form{background:var(--bg);border-radius:16px;padding:1.5rem}
+.c-inp{width:100%;background:#fff;border:1.5px solid var(--light);border-radius:10px;padding:.62rem .9rem;font-size:.86rem;outline:none;font-family:inherit;margin-bottom:.75rem;transition:.2s}
+.c-inp:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(20,184,166,.12)}
+.c-submit{width:100%;background:var(--p);color:#fff;border:none;padding:.82rem;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem;transition:.2s}
+.c-submit:hover{background:#0d6560;transform:translateY(-1px)}
+.insta-link{display:inline-flex;align-items:center;gap:.45rem;color:#e1306c;font-weight:600;font-size:.85rem;text-decoration:none;background:#fdf2f8;border-radius:8px;padding:.38rem .75rem;border:1px solid #fbcfe8;transition:.2s}
+.insta-link:hover{background:#fce7f3;transform:scale(1.03)}
+
+footer{background:var(--dark);color:#94a3b8;padding:clamp(2rem,5vw,3rem) clamp(1rem,3vw,2rem) 1.5rem}
+.footer-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem;margin-bottom:1.5rem}
+.footer-brand p{font-size:.81rem;line-height:1.7;margin-top:.65rem;max-width:270px}
+.footer-col h4{color:#fff;font-size:.86rem;font-weight:700;margin-bottom:.75rem}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:.42rem}
+.footer-col a{color:#94a3b8;text-decoration:none;font-size:.8rem;transition:.2s}
+.footer-col a:hover{color:var(--s)}
+.footer-bottom{max-width:1200px;margin:auto;border-top:1px solid #1e293b;padding-top:1.1rem;text-align:center;font-size:.76rem}
+.no-return{background:#1e293b;border-radius:8px;padding:.55rem .9rem;margin-top:.75rem;font-size:.75rem;color:#f59e0b;border-left:3px solid #f59e0b}
+.back-top-btn{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;border:none;padding:.65rem 1.8rem;border-radius:50px;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s;display:inline-flex;align-items:center;gap:.45rem;margin-top:1.2rem}
+.back-top-btn:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(15,118,110,.35)}
+
+/* SIDEBAR / CART */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300}
+.overlay.active{display:block}
+.cart-side{position:fixed;top:0;right:-420px;width:min(390px,98vw);height:100vh;background:#fff;z-index:400;transition:.3s ease;overflow-y:auto;box-shadow:-6px 0 30px rgba(0,0,0,.12)}
+.cart-side.open{right:0}
+.cart-hd{padding:1.2rem 1.1rem;border-bottom:1px solid var(--light);display:flex;align-items:center;justify-content:space-between}
+.cart-hd h3{font-size:.98rem;font-weight:700}
+.close-x{background:var(--bg);border:none;width:29px;height:29px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.cart-items-area{padding:.75rem .9rem}
+.c-item{display:flex;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--light)}
+.c-item-img{width:50px;height:50px;background:linear-gradient(135deg,#e6fffa,#ccfbf1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.c-item-info{flex:1;min-width:0}
+.c-item-name{font-size:.83rem;font-weight:600;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-item-price{color:var(--p);font-weight:700;font-size:.86rem}
+.qty-row{display:flex;align-items:center;gap:.38rem;margin-top:.28rem}
+.qty-b{background:var(--bg);border:1px solid var(--light);width:25px;height:25px;border-radius:6px;cursor:pointer;font-size:.88rem;display:flex;align-items:center;justify-content:center}
+.qty-n{font-size:.83rem;font-weight:600;min-width:17px;text-align:center}
+.rm-btn{background:none;border:none;cursor:pointer;color:#ef4444;font-size:.72rem;padding:.12rem .38rem;border-radius:5px;margin-left:auto}
+.cart-ft{padding:1.1rem;border-top:1px solid var(--light);background:#fff}
+.cart-total-row{display:flex;justify-content:space-between;font-size:.98rem;font-weight:700;margin-bottom:.75rem}
+.checkout-btn{width:100%;background:var(--p);color:#fff;border:none;padding:.85rem;border-radius:10px;cursor:pointer;font-weight:700;font-size:.9rem;transition:.2s}
+.checkout-btn:hover{background:#0d6560}
+.empty-cart{text-align:center;padding:2.5rem 1rem;color:var(--gray);font-size:.88rem}
+
+/* MODALS */
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-wrap.open{display:flex}
+.modal{background:#fff;border-radius:20px;padding:clamp(1.1rem,3.5vw,1.8rem);width:min(490px,98vw);max-height:90vh;overflow-y:auto;position:relative}
+.modal h3{font-size:1.1rem;font-weight:700;margin-bottom:1.2rem;color:var(--dark)}
+.m-close{position:absolute;top:.9rem;right:.9rem;background:var(--bg);border:none;width:29px;height:29px;border-radius:50%;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+.m-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.m-inp{width:100%;padding:.62rem .88rem;border:1.5px solid var(--light);border-radius:10px;font-size:.86rem;outline:none;font-family:inherit;margin-bottom:.65rem;transition:.2s}
+.m-inp:focus{border-color:var(--s)}
+.upi-box{background:linear-gradient(135deg,#f0fdfa,#ecfdf5);border-radius:12px;padding:1rem;text-align:center;border:2px dashed var(--s);margin:.75rem 0}
+.upi-id{font-size:1.05rem;font-weight:700;color:var(--p);margin:.28rem 0}
+.order-summary-box{background:#f0fdf4;border-radius:10px;padding:.85rem;font-size:.83rem;color:#166534;margin-bottom:.75rem}
+.place-btn{width:100%;background:var(--p);color:#fff;border:none;padding:.88rem;border-radius:12px;cursor:pointer;font-weight:700;font-size:.92rem;transition:.2s}
+.place-btn:hover{background:#0d6560}
+.success-box{text-align:center;padding:1.4rem 1rem}
+.success-icon{font-size:3.3rem;display:block;margin-bottom:.75rem}
+.success-box h3{font-size:1.35rem;font-weight:700;color:var(--dark);margin-bottom:.38rem}
+.success-box p{color:var(--gray);font-size:.86rem;line-height:1.6}
+.order-id-box{background:var(--bg);border-radius:8px;padding:.65rem;margin:.75rem 0;font-weight:700;color:var(--p)}
+
+/* ADMIN LOGIN */
+.admin-login-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:600;align-items:center;justify-content:center;padding:1rem}
+.admin-login-wrap.open{display:flex}
+.admin-login-box{background:#fff;border-radius:20px;padding:2rem;width:min(400px,95vw);position:relative}
+.admin-login-box h2{font-size:1.2rem;font-weight:700;color:var(--dark);margin-bottom:.28rem;text-align:center}
+.admin-sub{font-size:.8rem;color:var(--gray);text-align:center;margin-bottom:1.3rem}
+.admin-badge{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.38rem .75rem;font-size:.73rem;color:#166534;font-weight:600;text-align:center;margin-bottom:1.1rem}
+.a-inp{width:100%;padding:.68rem .95rem;border:1.5px solid var(--light);border-radius:10px;font-size:.88rem;outline:none;font-family:inherit;margin-bottom:.85rem;transition:.2s}
+.a-inp:focus{border-color:var(--s)}
+.captcha-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.85rem}
+.captcha-box{background:linear-gradient(135deg,#1e293b,#0f172a);color:#a7f3d0;font-family:monospace;font-size:1.25rem;font-weight:700;padding:.48rem 1.1rem;border-radius:10px;letter-spacing:.22rem;user-select:none;flex-shrink:0}
+.captcha-inp{flex:1;padding:.68rem .88rem;border:1.5px solid var(--light);border-radius:10px;font-size:.86rem;outline:none;font-family:monospace;transition:.2s}
+.captcha-inp:focus{border-color:var(--s)}
+.refresh-cap{background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--gray);padding:.25rem}
+.login-btn{width:100%;background:var(--p);color:#fff;border:none;padding:.88rem;border-radius:12px;cursor:pointer;font-weight:700;font-size:.92rem;transition:.2s}
+.login-btn:hover{background:#0d6560}
+.login-err{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:.55rem .88rem;font-size:.8rem;color:#dc2626;margin-bottom:.75rem;display:none}
+
+/* ADMIN DASHBOARD */
+.admin-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:flex-start;justify-content:center;overflow-y:auto;padding:1rem}
+.admin-wrap.open{display:flex}
+.admin-modal{background:#f8fafc;border-radius:20px;width:min(1050px,99vw);margin:auto;overflow:hidden}
+.admin-hd{background:var(--dark);color:#fff;padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.admin-hd h2{font-size:.95rem;font-weight:700}
+.admin-hd-right{display:flex;align-items:center;gap:.7rem}
+.logout-btn{background:#ef4444;color:#fff;border:none;padding:.32rem .75rem;border-radius:8px;cursor:pointer;font-size:.73rem;font-weight:600}
+.admin-tabs{display:flex;gap:.3rem;padding:.7rem .9rem;background:#fff;border-bottom:1px solid var(--light);flex-wrap:wrap}
+.a-tab{background:var(--bg);border:1px solid var(--light);border-radius:8px;padding:.38rem .85rem;cursor:pointer;font-size:.78rem;font-weight:600;color:var(--gray);transition:.2s}
+.a-tab.active{background:var(--p);color:#fff;border-color:var(--p)}
+.admin-body{padding:1.1rem}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:.75rem;margin-bottom:1.3rem}
+.kpi{background:#fff;border-radius:12px;padding:.9rem;border:1px solid var(--light)}
+.kpi-label{font-size:.7rem;color:var(--gray);margin-bottom:.28rem}
+.kpi-val{font-size:1.45rem;font-weight:700;color:var(--dark)}
+.kpi-sub{font-size:.68rem;color:var(--a);margin-top:.18rem}
+.orders-table{width:100%;border-collapse:collapse;font-size:.77rem}
+.orders-table th{background:var(--bg);padding:.55rem .65rem;text-align:left;font-weight:600;color:var(--gray);border-bottom:1px solid var(--light);white-space:nowrap}
+.orders-table td{padding:.55rem .65rem;border-bottom:1px solid var(--light);vertical-align:middle}
+.status-badge{padding:.13rem .5rem;border-radius:50px;font-size:.65rem;font-weight:700;cursor:pointer}
+.paid{background:#dcfce7;color:#166534}
+.unpaid{background:#fee2e2;color:#991b1b}
+.chart-area{background:#fff;border-radius:12px;padding:.9rem;border:1px solid var(--light);margin-bottom:.9rem}
+.chart-area h4{font-size:.85rem;font-weight:700;color:var(--dark);margin-bottom:.75rem}
+.prod-sales{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:.75rem}
+.ps-card{background:#fff;border-radius:10px;padding:.75rem;border:1px solid var(--light);display:flex;align-items:center;gap:.75rem}
+.ps-name{font-size:.78rem;font-weight:600;color:var(--dark)}
+.ps-count{font-size:.7rem;color:var(--gray)}
+.ps-bar-wrap{background:var(--light);border-radius:50px;height:4px;margin-top:.28rem}
+.ps-bar{background:var(--p);border-radius:50px;height:4px}
+.admin-rev-card{background:#fff;border-radius:10px;padding:.85rem;border:1px solid var(--light);margin-bottom:.65rem}
+.admin-rev-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.38rem}
+.admin-rev-name{font-size:.86rem;font-weight:700;color:var(--dark)}
+.admin-rev-stars{color:#f59e0b;font-size:.76rem}
+.admin-rev-text{font-size:.8rem;color:var(--gray);font-style:italic;margin-top:.28rem}
+.del-rev-btn{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:6px;padding:.18rem .5rem;font-size:.7rem;cursor:pointer;white-space:nowrap}
+.job-admin-card{background:#fff;border-radius:10px;padding:.85rem;border:1px solid var(--light);margin-bottom:.65rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.job-admin-title{font-size:.88rem;font-weight:700;color:var(--dark)}
+.job-admin-sub{font-size:.75rem;color:var(--gray)}
+.job-admin-count{background:#f0fdf4;color:#166534;border-radius:8px;padding:.22rem .65rem;font-size:.72rem;font-weight:700}
+
+.toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;padding:.65rem 1.3rem;border-radius:50px;font-size:.83rem;font-weight:500;z-index:900;transition:.3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* APPLY MODAL */
+.apply-modal{background:#fff;border-radius:20px;padding:1.8rem;width:min(440px,96vw);max-height:90vh;overflow-y:auto;position:relative}
+.apply-modal h3{font-size:1.1rem;font-weight:700;margin-bottom:1.1rem;color:var(--dark)}
+
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .nav-links.mob-open{display:flex;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#fff;padding:.9rem;gap:.7rem;box-shadow:0 8px 20px rgba(0,0,0,.1);z-index:250}
+  .hamburger{display:block}
+  .footer-grid{grid-template-columns:1fr}
+  .m-row,.rev-form{grid-template-columns:1fr}
+  .rev-ta,.rev-submit{grid-column:1}
+  .rev-submit{justify-self:stretch;text-align:center}
+  .prod-grid{grid-template-columns:1fr}
+  .admin-btn{display:none}
+}
+</style>
+
+<!-- ZOOM BAR -->
+<div class="zoom-bar" role="group" aria-label="Text size controls">
+  <button class="zin" onclick="changeZoom(0.1)" title="Zoom in" aria-label="Zoom in">+</button>
+  <div class="zoom-label" id="zoomLabel">100%</div>
+  <button class="zout" onclick="changeZoom(-0.1)" title="Zoom out" aria-label="Zoom out">−</button>
+</div>
+
+<!-- LANGUAGE SWITCH -->
+<div class="lang-bar" role="group" aria-label="Language selection">
+  <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" id="btnMR" onclick="setLang('mr')">मराठी</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo-wrap" href="#home">
+      <div class="logo-img">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="42" height="42">
+          <defs>
+            <clipPath id="circle-clip"><circle cx="40" cy="40" r="38"/></clipPath>
+            <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#0d9488"/>
+              <stop offset="100%" stop-color="#065f46"/>
+            </radialGradient>
+          </defs>
+          <circle cx="40" cy="40" r="38" fill="url(#bg-grad)"/>
+          <circle cx="40" cy="40" r="35" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/>
+          <g clip-path="url(#circle-clip)">
+            <circle cx="40" cy="40" r="22" fill="none" stroke="rgba(167,243,208,.7)" stroke-width="1.2"/>
+            <circle cx="40" cy="40" r="13" fill="none" stroke="rgba(167,243,208,.5)" stroke-width="1"/>
+            <circle cx="40" cy="40" r="7" fill="rgba(167,243,208,.9)"/>
+            <circle cx="40" cy="40" r="4" fill="rgba(255,255,255,.95)"/>
+            <ellipse cx="40" cy="40" rx="28" ry="8" fill="none" stroke="rgba(56,189,248,.8)" stroke-width="1.8" transform="rotate(-35 40 40)"/>
+            <ellipse cx="40" cy="40" rx="28" ry="8" fill="none" stroke="rgba(56,189,248,.55)" stroke-width="1.2" transform="rotate(35 40 40)"/>
+            <circle cx="28" cy="34" r="2.5" fill="rgba(255,255,255,.6)"/>
+            <circle cx="52" cy="45" r="2" fill="rgba(255,255,255,.5)"/>
+            <circle cx="44" cy="28" r="1.8" fill="rgba(255,255,255,.55)"/>
+            <rect x="10" y="10" width="60" height="60" rx="0" fill="none"/>
+            <path d="M5 40 Q15 32 25 40 Q35 48 45 40 Q55 32 65 40 Q72 45 75 42" fill="none" stroke="rgba(167,243,208,.35)" stroke-width="1"/>
+            <path d="M18 22 Q28 30 38 22 Q48 14 58 22 Q65 27 68 24" fill="none" stroke="rgba(167,243,208,.25)" stroke-width=".8"/>
+            <path d="M14 55 Q24 47 34 55 Q44 63 54 55 Q62 49 66 52" fill="none" stroke="rgba(167,243,208,.25)" stroke-width=".8"/>
+          </g>
+          <circle cx="40" cy="40" r="38" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+          <path d="M10 26 Q22 24 24 16" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M70 26 Q58 24 56 16" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 54 Q22 56 24 64" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M70 54 Q58 56 56 64" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="logo-text" data-en="🌿 FungiCure Pro" data-mr="🌿 फंगीक्युअर प्रो">🌿 FungiCure Pro</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#products" onclick="closeMenu()" data-en="Products" data-mr="उत्पादने">Products</a></li>
+      <li><a href="#reviews" onclick="closeMenu()" data-en="Reviews" data-mr="समीक्षा">Reviews</a></li>
+      <li><a href="#info" onclick="closeMenu()" data-en="Info" data-mr="माहिती">Info</a></li>
+      <li><a href="#careers" onclick="closeMenu()" data-en="Careers" data-mr="करिअर">Careers</a></li>
+      <li><a href="#contact" onclick="closeMenu()" data-en="Contact" data-mr="संपर्क">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="admin-btn" onclick="openAdminLogin()" data-en="⚙️ Admin" data-mr="⚙️ अ‍ॅडमिन">⚙️ Admin</button>
+      <button class="cart-btn" onclick="openCart()">🛒 <span data-en="Cart" data-mr="कार्ट">Cart</span> <span class="cart-count" id="cartCount">0</span></button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-blob b1"></div><div class="hero-blob b2"></div>
+  <div class="hero-badge reveal" data-en="🌿 Trusted by 1,000+ Customers Across India" data-mr="🌿 भारतभर १,०००+ ग्राहकांचा विश्वास">🌿 Trusted by 1,000+ Customers Across India</div>
+  <h1 class="reveal"><span data-en="Say Goodbye to" data-mr="बाय बाय करा">Say Goodbye to</span><br><em data-en="Fungal Infections" data-mr="बुरशीजन्य संसर्गाला">Fungal Infections</em> <span data-en="For Good" data-mr="कायमचे">For Good</span></h1>
+  <p class="reveal" data-en="Fast-acting, 100% Ayurvedic formula. Relieves itching, redness and fungal infections — visible results in just days." data-mr="वेगाने काम करणारे, १००% आयुर्वेदिक सूत्र. खाज, लालसरपणा आणि बुरशीजन्य संसर्गापासून आराम — काही दिवसांतच दृश्यमान परिणाम.">Fast-acting, 100% Ayurvedic formula. Relieves itching, redness and fungal infections — visible results in just days.</p>
+  <div class="hero-btns reveal">
+    <button class="btn-w" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" data-en="Shop Now 🛍️" data-mr="आत्ता खरेदी करा 🛍️">Shop Now 🛍️</button>
+    <button class="btn-o" onclick="document.getElementById('info').scrollIntoView({behavior:'smooth'})" data-en="Learn More" data-mr="अधिक जाणून घ्या">Learn More</button>
+  </div>
+  <div class="hero-stats reveal">
+    <div class="stat"><div class="stat-num">1,000+</div><div class="stat-label" data-en="Happy Customers" data-mr="आनंदी ग्राहक">Happy Customers</div></div>
+    <div class="stat"><div class="stat-num">3–5</div><div class="stat-label" data-en="Days Relief" data-mr="दिवसांत आराम">Days Relief</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-en="Ayurvedic Formula" data-mr="आयुर्वेदिक सूत्र">Ayurvedic Formula</div></div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="trust-inner">
+    <div class="badge-t"><div class="badge-icon">✅</div> <span data-en="Clinically Tested" data-mr="क्लिनिकली चाचणी केलेले">Clinically Tested</span></div>
+    <div class="badge-t"><div class="badge-icon">🔬</div> <span data-en="Lab Certified" data-mr="लॅब प्रमाणित">Lab Certified</span></div>
+    <div class="badge-t"><div class="badge-icon">🚚</div> <span data-en="Free Delivery" data-mr="मोफत डिलिव्हरी">Free Delivery</span></div>
+    <div class="badge-t"><div class="badge-icon">🌿</div> <span data-en="100% Ayurvedic" data-mr="१००% आयुर्वेदिक">100% Ayurvedic</span></div>
+    <div class="badge-t"><div class="badge-icon">👨‍⚕️</div> <span data-en="Doctor Approved" data-mr="डॉक्टर मान्यताप्राप्त">Doctor Approved</span></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="sec" style="background:#fff" id="features">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Why Choose FungiCure Pro?" data-mr="फंगीक्युअर प्रो का निवडावे?">Why Choose FungiCure Pro?</h2><p data-en="Proven Ayurvedic formula for lasting relief" data-mr="टिकाऊ आरामासाठी सिद्ध आयुर्वेदिक सूत्र">Proven Ayurvedic formula for lasting relief</p></div>
+    <div class="feat-grid">
+      <div class="feat-card reveal"><div class="feat-icon">⚡</div><h3 data-en="Fast Relief" data-mr="जलद आराम">Fast Relief</h3><p data-en="Feel the difference within 3–5 days. Quick-absorbing Ayurvedic formula." data-mr="३–५ दिवसांत फरक जाणवा. जलद शोषणारे आयुर्वेदिक सूत्र.">Feel the difference within 3–5 days. Quick-absorbing Ayurvedic formula.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">🔬</div><h3 data-en="Clinically Tested" data-mr="क्लिनिकली चाचणी केलेले">Clinically Tested</h3><p data-en="Proven effective against ringworm, athlete's foot, jock itch and more." data-mr="दाद, ऍथलीट फूट, जॉक इच आणि इतरांविरुद्ध प्रभावी सिद्ध.">Proven effective against ringworm, athlete's foot, jock itch and more.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">🌿</div><h3 data-en="100% Ayurvedic" data-mr="१००% आयुर्वेदिक">100% Ayurvedic</h3><p data-en="Pure natural ingredients. No harmful chemicals. Safe for all skin types." data-mr="शुद्ध नैसर्गिक घटक. कोणतेही हानिकारक रसायन नाही. सर्व त्वचा प्रकारांसाठी सुरक्षित.">Pure natural ingredients. No harmful chemicals. Safe for all skin types.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">👨‍⚕️</div><h3 data-en="Doctor Approved" data-mr="डॉक्टर मान्यताप्राप्त">Doctor Approved</h3><p data-en="Recommended by healthcare professionals across India." data-mr="भारतभर आरोग्य व्यावसायिकांनी शिफारस केलेले.">Recommended by healthcare professionals across India.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="sec" id="products" style="background:var(--bg)">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Our Products" data-mr="आमची उत्पादने">Our Products</h2><p data-en="Choose the right pack — Free delivery on all orders 🚚" data-mr="योग्य पॅक निवडा — सर्व ऑर्डरवर मोफत डिलिव्हरी 🚚">Choose the right pack — Free delivery on all orders 🚚</p></div>
+    <div class="prod-grid" id="prodGrid"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec" style="background:#fff">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="How It Works" data-mr="हे कसे काम करते">How It Works</h2><p data-en="Simple 4-step treatment" data-mr="सरळ ४-पायरी उपचार">Simple 4-step treatment</p></div>
+    <div class="steps-row">
+      <div class="step reveal"><div class="step-num">1</div><h3 data-en="Clean Area" data-mr="क्षेत्र स्वच्छ करा">Clean Area</h3><p data-en="Wash infected area with clean water and dry thoroughly." data-mr="संसर्गित क्षेत्र स्वच्छ पाण्याने धुवा आणि पूर्णपणे कोरडे करा.">Wash infected area with clean water and dry thoroughly.</p></div>
+      <div class="step reveal"><div class="step-num">2</div><h3 data-en="Apply Cream" data-mr="क्रीम लावा">Apply Cream</h3><p data-en="Apply thin layer of FungiCure Pro twice daily." data-mr="फंगीक्युअर प्रोचा पातळ थर दिवसातून दोनदा लावा.">Apply thin layer of FungiCure Pro twice daily.</p></div>
+      <div class="step reveal"><div class="step-num">3</div><h3 data-en="Complete Course" data-mr="कोर्स पूर्ण करा">Complete Course</h3><p data-en="Follow dosage based on body coverage for full recovery." data-mr="पूर्ण बरे होण्यासाठी शरीराच्या क्षेत्रानुसार डोस पाळा.">Follow dosage based on body coverage for full recovery.</p></div>
+      <div class="step reveal"><div class="step-num">4</div><h3 data-en="Stay Infection-Free" data-mr="संसर्गमुक्त राहा">Stay Infection-Free</h3><p data-en="Enjoy long-lasting relief from fungal infections." data-mr="बुरशीजन्य संसर्गापासून दीर्घकालीन आराम मिळवा.">Enjoy long-lasting relief from fungal infections.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" id="reviews" style="background:var(--bg)">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Customer Reviews" data-mr="ग्राहक समीक्षा">Customer Reviews</h2><p data-en="Share your experience and help others" data-mr="आपला अनुभव शेअर करा आणि इतरांना मदत करा">Share your experience and help others</p></div>
+    <div class="review-form-area reveal">
+      <h3 data-en="✍️ Write a Review" data-mr="✍️ समीक्षा लिहा">✍️ Write a Review</h3>
+      <div style="margin-bottom:.75rem">
+        <div style="font-size:.8rem;font-weight:600;color:var(--dark);margin-bottom:.38rem" data-en="Your Rating" data-mr="तुमचे रेटिंग">Your Rating</div>
+        <div class="star-pick" id="starPick">
+          <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span>
+          <span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+        </div>
+      </div>
+      <div class="rev-form">
+        <input class="rev-inp" id="revName" placeholder="Your full name" type="text" data-en-ph="Your full name" data-mr-ph="तुमचे पूर्ण नाव">
+        <input class="rev-inp" id="revLoc" placeholder="Your city" type="text" data-en-ph="Your city (e.g. Mumbai)" data-mr-ph="तुमचे शहर (उदा. मुंबई)">
+        <textarea class="rev-inp rev-ta" id="revText" rows="3" placeholder="Share your experience..." data-en-ph="Share your experience with FungiCure Pro..." data-mr-ph="फंगीक्युअर प्रोसह तुमचा अनुभव शेअर करा..."></textarea>
+        <button class="rev-submit" onclick="submitReview()" data-en="Submit Review ⭐" data-mr="समीक्षा सबमिट करा ⭐">Submit Review ⭐</button>
+      </div>
+    </div>
+    <div class="reviews-list" id="reviewsList"></div>
+    <div id="moreRevNote" style="text-align:center;margin-top:1.1rem;font-size:.81rem;color:var(--gray);display:none">
+      ✅ <span data-en="More reviews available —" data-mr="अधिक समीक्षा उपलब्ध —">More reviews available —</span> <strong id="moreRevCount"></strong> <span data-en="additional review(s) visible in admin dashboard." data-mr="अतिरिक्त समीक्षा अ‍ॅडमिन डॅशबोर्डमध्ये दृश्यमान.">additional review(s) visible in admin dashboard.</span>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="sec" id="info" style="background:#fff">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Fungal Infection Information" data-mr="बुरशीजन्य संसर्ग माहिती">Fungal Infection Information</h2><p data-en="Understand your condition better" data-mr="आपली स्थिती अधिक चांगल्या प्रकारे समजून घ्या">Understand your condition better</p></div>
+    <div class="info-grid">
+      <div class="info-card reveal"><h4 data-en="🦠 Types" data-mr="🦠 प्रकार">🦠 Types</h4><p data-en="Ringworm, Athlete's Foot, Jock Itch, Nail Fungus, Candida — all treatable with our Ayurvedic formula." data-mr="दाद, ऍथलीट फूट, जॉक इच, नेल फंगस, कँडिडा — सर्व आमच्या आयुर्वेदिक सूत्राने उपचार करण्यायोग्य.">Ringworm, Athlete's Foot, Jock Itch, Nail Fungus, Candida — all treatable with our Ayurvedic formula.</p></div>
+      <div class="info-card reveal"><h4 data-en="⚠️ Symptoms" data-mr="⚠️ लक्षणे">⚠️ Symptoms</h4><p data-en="Itching, redness, circular rash, scaling skin, burning sensation and discoloration." data-mr="खाज, लालसरपणा, गोल पुरळ, त्वचा सोलणे, जळजळ आणि रंग बदलणे.">Itching, redness, circular rash, scaling skin, burning sensation and discoloration.</p></div>
+      <div class="info-card reveal"><h4 data-en="🔍 Causes" data-mr="🔍 कारणे">🔍 Causes</h4><p data-en="Sweat, humidity, shared towels/clothing, weakened immunity, poor hygiene." data-mr="घाम, आर्द्रता, सामायिक टॉवेल/कपडे, कमकुवत प्रतिकारशक्ती, खराब स्वच्छता.">Sweat, humidity, shared towels/clothing, weakened immunity, poor hygiene.</p></div>
+      <div class="info-card reveal"><h4 data-en="🛡️ Prevention" data-mr="🛡️ प्रतिबंध">🛡️ Prevention</h4><p data-en="Keep skin dry, wear clean clothes, avoid sharing personal items, maintain hygiene." data-mr="त्वचा कोरडी ठेवा, स्वच्छ कपडे घाला, वैयक्तिक वस्तू शेअर करणे टाळा, स्वच्छता राखा.">Keep skin dry, wear clean clothes, avoid sharing personal items, maintain hygiene.</p></div>
+      <div class="info-card reveal"><h4 data-en="💊 Treatment" data-mr="💊 उपचार">💊 Treatment</h4><p data-en="Apply consistently. Full course is essential for complete recovery." data-mr="सतत लावा. पूर्ण बरे होण्यासाठी पूर्ण कोर्स आवश्यक आहे.">Apply consistently. Full course is essential for complete recovery.</p></div>
+      <div class="info-card reveal"><h4 data-en="📋 Dosage Guide" data-mr="📋 डोस मार्गदर्शक">📋 Dosage Guide</h4><p data-en="Full body: 10–12 boxes. Half body: 6–7 boxes. Small area: 3–5 boxes." data-mr="संपूर्ण शरीर: १०–१२ बॉक्स. अर्धे शरीर: ६–७ बॉक्स. लहान क्षेत्र: ३–५ बॉक्स.">Full body: 10–12 boxes. Half body: 6–7 boxes. Small area: 3–5 boxes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" style="background:var(--bg)" id="faq">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Frequently Asked Questions" data-mr="वारंवार विचारले जाणारे प्रश्न">Frequently Asked Questions</h2><p data-en="Everything you need to know" data-mr="तुम्हाला जे जाणून घ्यायचे आहे ते सर्व">Everything you need to know</p></div>
+    <div id="faqList"></div>
+  </div>
+</section>
+
+<!-- CAREERS -->
+<section class="sec" id="careers" style="background:#fff">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-en="Careers at FungiCure Pro" data-mr="फंगीक्युअर प्रोमध्ये करिअर">Careers at FungiCure Pro</h2><p data-en="Join our growing team — Work From Home opportunities available" data-mr="आमच्या वाढत्या टीममध्ये सामील व्हा — वर्क फ्रॉम होम संधी उपलब्ध">Join our growing team — Work From Home opportunities available</p></div>
+    <div class="careers-grid">
+      <div class="job-card reveal">
+        <span class="job-badge">🏠 Work From Home</span>
+        <div class="job-title" data-en="Data Analyst Intern" data-mr="डेटा विश्लेषक इंटर्न">Data Analyst Intern</div>
+        <div class="job-type" data-en="📊 Internship · Remote · Unpaid/Stipend" data-mr="📊 इंटर्नशिप · रिमोट · विनामूल्य/स्टायपेंड">📊 Internship · Remote · Unpaid/Stipend</div>
+        <div class="job-desc" data-en="Analyse sales data, customer trends and product performance. Help build weekly/monthly reports and dashboards for management. Great learning opportunity in e-commerce analytics." data-mr="विक्री डेटा, ग्राहक ट्रेंड आणि उत्पादन कार्यक्षमता विश्लेषण करा. व्यवस्थापनासाठी साप्ताहिक/मासिक अहवाल आणि डॅशबोर्ड तयार करण्यात मदत करा.">Analyse sales data, customer trends and product performance. Help build weekly/monthly reports and dashboards for management. Great learning opportunity in e-commerce analytics.</div>
+        <div class="job-tags">
+          <span class="job-tag">Excel / Google Sheets</span>
+          <span class="job-tag">SQL basics</span>
+          <span class="job-tag">Reporting</span>
+          <span class="job-tag">Work From Home</span>
+        </div>
+        <button class="apply-btn" onclick="openApply('Data Analyst Intern')" data-en="Apply Now →" data-mr="आता अर्ज करा →">Apply Now →</button>
+      </div>
+      <div class="job-card reveal">
+        <span class="job-badge">🏠 Work From Home</span>
+        <div class="job-title" data-en="Backend Developer Intern" data-mr="बॅकएंड डेव्हलपर इंटर्न">Backend Developer Intern</div>
+        <div class="job-type" data-en="💻 Internship · Remote · Stipend Based" data-mr="💻 इंटर्नशिप · रिमोट · स्टायपेंड आधारित">💻 Internship · Remote · Stipend Based</div>
+        <div class="job-desc" data-en="Build and maintain backend APIs for our e-commerce platform. Work with Node.js/Python, databases and payment integrations. Real-world project experience with a growing health-tech brand." data-mr="आमच्या ई-कॉमर्स प्लॅटफॉर्मसाठी बॅकएंड API तयार करा आणि देखरेख करा. Node.js/Python, डेटाबेस आणि पेमेंट इंटिग्रेशनसह कार्य करा.">Build and maintain backend APIs for our e-commerce platform. Work with Node.js/Python, databases and payment integrations. Real-world project experience with a growing health-tech brand.</div>
+        <div class="job-tags">
+          <span class="job-tag">Node.js / Python</span>
+          <span class="job-tag">REST APIs</span>
+          <span class="job-tag">MongoDB</span>
+          <span class="job-tag">Work From Home</span>
+        </div>
+        <button class="apply-btn" onclick="openApply('Backend Developer Intern')" data-en="Apply Now →" data-mr="आता अर्ज करा →">Apply Now →</button>
+      </div>
+      <div class="job-card reveal">
+        <span class="job-badge">🏠 Work From Home</span>
+        <div class="job-title" data-en="Customer Service Executive" data-mr="ग्राहक सेवा कार्यकारी">Customer Service Executive</div>
+        <div class="job-type" data-en="📞 Full-Time · Remote · Paid" data-mr="📞 पूर्णवेळ · रिमोट · वेतनसह">📞 Full-Time · Remote · Paid</div>
+        <div class="job-desc" data-en="Handle customer queries via WhatsApp, email and phone. Process orders, resolve complaints and ensure customer satisfaction. Fluency in Hindi/Marathi/English preferred." data-mr="WhatsApp, ईमेल आणि फोनद्वारे ग्राहकांच्या शंकांचे निराकरण करा. ऑर्डर प्रक्रिया करा, तक्रारी सोडवा आणि ग्राहकांचे समाधान सुनिश्चित करा.">Handle customer queries via WhatsApp, email and phone. Process orders, resolve complaints and ensure customer satisfaction. Fluency in Hindi/Marathi/English preferred.</div>
+        <div class="job-tags">
+          <span class="job-tag">Communication</span>
+          <span class="job-tag">Hindi/Marathi</span>
+          <span class="job-tag">WhatsApp Business</span>
+          <span class="job-tag">Work From Home</span>
+        </div>
+        <button class="apply-btn" onclick="openApply('Customer Service Executive')" data-en="Apply Now →" data-mr="आता अर्ज करा →">Apply Now →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec" id="contact" style="background:var(--bg)">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal-left">
+        <h3 data-en="Get In Touch" data-mr="संपर्क साधा">Get In Touch</h3>
+        <p data-en="Have questions about our products or your order? We are here to help 7 days a week." data-mr="आमच्या उत्पादनांबद्दल किंवा आपल्या ऑर्डरबद्दल प्रश्न आहेत? आम्ही आठवड्याचे ७ दिवस मदत करण्यासाठी येथे आहोत.">Have questions about our products or your order? We are here to help 7 days a week.</p>
+        <div class="c-detail"><div class="c-icon">📧</div> support@fungicurepro.com</div>
+        <div class="c-detail"><div class="c-icon">💬</div> <span data-en="WhatsApp support available" data-mr="WhatsApp सपोर्ट उपलब्ध">WhatsApp support available</span></div>
+        <div class="c-detail"><div class="c-icon">🕐</div> <span data-en="Mon–Sat, 9 AM – 7 PM IST" data-mr="सोम–शनि, सकाळी ९ – सायंकाळी ७ IST">Mon–Sat, 9 AM – 7 PM IST</span></div>
+        <div class="c-detail"><div class="c-icon">📦</div> <span data-en="Free delivery across India in 3–7 days" data-mr="भारतभर ३–७ दिवसांत मोफत डिलिव्हरी">Free delivery across India in 3–7 days</span></div>
+        <div style="margin-top:1rem">
+          <a class="insta-link" href="#" id="instaLink">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            @fungicurepro <span style="color:var(--gray);font-weight:400;font-size:.76rem" data-en="(ID coming soon)" data-mr="(आयडी लवकरच)">(ID coming soon)</span>
+          </a>
+        </div>
+      </div>
+      <div class="c-form reveal-right">
+        <input class="c-inp" type="text" data-en-ph="Your name" data-mr-ph="तुमचे नाव" placeholder="Your name">
+        <input class="c-inp" type="text" data-en-ph="Email or WhatsApp number" data-mr-ph="ईमेल किंवा WhatsApp नंबर" placeholder="Email or WhatsApp number">
+        <textarea class="c-inp" rows="4" data-en-ph="How can we help you?" data-mr-ph="आम्ही तुम्हाला कशी मदत करू शकतो?" placeholder="How can we help you?" style="resize:none"></textarea>
+        <button class="c-submit" onclick="showToast('✅ Message sent!')" data-en="Send Message ✉️" data-mr="संदेश पाठवा ✉️">Send Message ✉️</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+          <circle cx="40" cy="40" r="38" fill="#0d9488"/>
+          <circle cx="40" cy="40" r="22" fill="none" stroke="rgba(167,243,208,.6)" stroke-width="1.2"/>
+          <circle cx="40" cy="40" r="13" fill="none" stroke="rgba(167,243,208,.4)" stroke-width="1"/>
+          <circle cx="40" cy="40" r="7" fill="rgba(167,243,208,.85)"/>
+          <circle cx="40" cy="40" r="4" fill="rgba(255,255,255,.9)"/>
+          <ellipse cx="40" cy="40" rx="28" ry="8" fill="none" stroke="rgba(56,189,248,.7)" stroke-width="1.6" transform="rotate(-35 40 40)"/>
+          <ellipse cx="40" cy="40" rx="28" ry="8" fill="none" stroke="rgba(56,189,208,.45)" stroke-width="1" transform="rotate(35 40 40)"/>
+        </svg>
+        <span style="color:#14B8A6;font-size:1.05rem;font-weight:700" data-en="FungiCure Pro" data-mr="फंगीक्युअर प्रो">FungiCure Pro</span>
+      </div>
+      <p data-en="India's trusted 100% Ayurvedic anti-fungal medicine brand. Clinically tested, doctor approved, trusted by 1,000+ customers." data-mr="भारताचा विश्वासार्ह १००% आयुर्वेदिक बुरशीविरोधी औषध ब्रँड. क्लिनिकली चाचणी केलेले, डॉक्टर मान्यताप्राप्त, १,०००+ ग्राहकांनी विश्वास ठेवलेला.">India's trusted 100% Ayurvedic anti-fungal medicine brand. Clinically tested, doctor approved, trusted by 1,000+ customers.</p>
+      <div class="no-return" data-en="⚠️ No return policy — All sales are final. Please read product details carefully before purchase." data-mr="⚠️ परतावा धोरण नाही — सर्व विक्री अंतिम आहे. कृपया खरेदीपूर्वी उत्पादनाचे तपशील काळजीपूर्वक वाचा.">⚠️ No return policy — All sales are final. Please read product details carefully before purchase.</div>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Quick Links" data-mr="द्रुत दुवे">Quick Links</h4>
+      <ul>
+        <li><a href="#home" data-en="Home" data-mr="मुख्यपृष्ठ">Home</a></li>
+        <li><a href="#products" data-en="Products" data-mr="उत्पादने">Products</a></li>
+        <li><a href="#reviews" data-en="Reviews" data-mr="समीक्षा">Reviews</a></li>
+        <li><a href="#careers" data-en="Careers" data-mr="करिअर">Careers</a></li>
+        <li><a href="#contact" data-en="Contact" data-mr="संपर्क">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Policies" data-mr="धोरणे">Policies</h4>
+      <ul>
+        <li><a href="#" data-en="Privacy Policy" data-mr="गोपनीयता धोरण">Privacy Policy</a></li>
+        <li><a href="#" data-en="Shipping Info" data-mr="शिपिंग माहिती">Shipping Info</a></li>
+        <li><a href="#" data-en="Terms of Use" data-mr="वापराच्या अटी">Terms of Use</a></li>
+        <li><a href="#" style="color:#f59e0b" data-en="No Return Policy" data-mr="परतावा धोरण नाही">No Return Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-en="© 2026 FungiCure Pro. All rights reserved. | Made with ❤️ in India" data-mr="© २०२६ फंगीक्युअर प्रो. सर्व हक्क राखीव. | ❤️ भारतात बनवलेले">© 2026 FungiCure Pro. All rights reserved. | Made with ❤️ in India</span>
+    <div><button class="back-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span data-en="↑ Back to Top" data-mr="↑ वर जा">↑ Back to Top</span></button></div>
+  </div>
+</footer>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- CART -->
+<div class="cart-side" id="cartSide">
+  <div class="cart-hd"><h3>🛒 <span data-en="Your Cart" data-mr="तुमची कार्ट">Your Cart</span></h3><button class="close-x" onclick="closeCart()">✕</button></div>
+  <div class="cart-items-area" id="cartItemsArea"></div>
+  <div class="cart-ft" id="cartFt" style="display:none">
+    <div class="cart-total-row"><span data-en="Total" data-mr="एकूण">Total</span><span id="cartTotal">₹0</span></div>
+    <button class="checkout-btn" onclick="openCheckout()" data-en="Proceed to Checkout →" data-mr="चेकआउटकडे जा →">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-wrap" id="checkoutModal">
+  <div class="modal">
+    <button class="m-close" onclick="closeCheckout()">✕</button>
+    <h3 data-en="🛍️ Complete Your Order" data-mr="🛍️ तुमची ऑर्डर पूर्ण करा">🛍️ Complete Your Order</h3>
+    <div class="m-row">
+      <input class="m-inp" id="fname" placeholder="First name" type="text">
+      <input class="m-inp" id="lname" placeholder="Last name" type="text">
+    </div>
+    <input class="m-inp" id="phone" placeholder="Phone / WhatsApp" type="tel" style="width:100%">
+    <input class="m-inp" id="email" placeholder="Email (optional)" type="email" style="width:100%">
+    <textarea class="m-inp" id="address" rows="3" placeholder="Full delivery address" style="width:100%;resize:none"></textarea>
+    <div class="m-row">
+      <input class="m-inp" id="city" placeholder="City">
+      <input class="m-inp" id="pin" placeholder="PIN Code">
+    </div>
+    <div class="upi-box">
+      <div style="font-size:1.9rem;margin-bottom:.28rem">📱</div>
+      <div style="font-size:.76rem;color:var(--gray)">Pay via UPI</div>
+      <div class="upi-id">fungicurepro@upi</div>
+      <div style="font-size:.71rem;color:var(--gray);margin-top:.3rem">Share payment screenshot on WhatsApp for fast dispatch.</div>
+    </div>
+    <div class="order-summary-box" data-en="Order Total:" data-mr="ऑर्डर एकूण:">Order Total: <strong id="modalTotal">₹0</strong> — Free delivery included.</div>
+    <button class="place-btn" onclick="placeOrder()" data-en="✅ Place Order" data-mr="✅ ऑर्डर द्या">✅ Place Order</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-wrap" id="successModal">
+  <div class="modal">
+    <div class="success-box">
+      <span class="success-icon">🎉</span>
+      <h3 data-en="Order Placed!" data-mr="ऑर्डर दिली!">Order Placed!</h3>
+      <div class="order-id-box" id="orderIdBox"></div>
+      <p data-en="Thank you! Please pay via UPI to fungicurepro@upi and send your payment screenshot on WhatsApp for quick dispatch." data-mr="धन्यवाद! कृपया fungicurepro@upi वर UPI द्वारे पेमेंट करा आणि जलद डिस्पॅचसाठी WhatsApp वर पेमेंट स्क्रीनशॉट पाठवा.">Thank you! Please pay via UPI to <strong>fungicurepro@upi</strong> and send your payment screenshot on WhatsApp for quick dispatch.</p>
+      <br>
+      <button class="place-btn" onclick="document.getElementById('successModal').classList.remove('open')" data-en="Continue Shopping" data-mr="खरेदी सुरू ठेवा">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="modal-wrap" id="applyModal">
+  <div class="apply-modal">
+    <button class="m-close" onclick="document.getElementById('applyModal').classList.remove('open')">✕</button>
+    <h3 id="applyTitle">Apply Now</h3>
+    <input class="m-inp" style="width:100%;margin-bottom:.7rem" placeholder="Full Name" type="text">
+    <input class="m-inp" style="width:100%;margin-bottom:.7rem" placeholder="Email Address" type="email">
+    <input class="m-inp" style="width:100%;margin-bottom:.7rem" placeholder="Phone / WhatsApp" type="tel">
+    <textarea class="m-inp" rows="3" style="width:100%;resize:none;margin-bottom:.7rem" placeholder="Tell us about yourself and why you're interested in this role..."></textarea>
+    <input class="m-inp" style="width:100%;margin-bottom:1rem" placeholder="Resume link (Google Drive / LinkedIn)" type="text">
+    <button class="place-btn" onclick="submitApplication()" data-en="Submit Application →" data-mr="अर्ज सबमिट करा →">Submit Application →</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="admin-login-wrap" id="adminLoginWrap">
+  <div class="admin-login-box">
+    <button class="m-close" onclick="closeAdminLogin()">✕</button>
+    <div style="text-align:center;font-size:2rem;margin-bottom:.45rem">🔐</div>
+    <h2 data-en="Admin Login" data-mr="अ‍ॅडमिन लॉगिन">Admin Login</h2>
+    <p class="admin-sub" data-en="Owner access only — not for customers" data-mr="फक्त मालकासाठी प्रवेश — ग्राहकांसाठी नाही">Owner access only — not for customers</p>
+    <div class="admin-badge" data-en="🔒 Restricted Area — Authorized Personnel Only" data-mr="🔒 प्रतिबंधित क्षेत्र — अधिकृत कर्मचारीच">🔒 Restricted Area — Authorized Personnel Only</div>
+    <div class="login-err" id="loginErr" data-en="Incorrect username, password or CAPTCHA." data-mr="चुकीचे वापरकर्तानाव, पासवर्ड किंवा CAPTCHA.">Incorrect username, password or CAPTCHA.</div>
+    <input class="a-inp" id="adminUser" placeholder="Username" type="text" autocomplete="off">
+    <input class="a-inp" id="adminPass" placeholder="Password" type="password" autocomplete="off">
+    <div style="font-size:.8rem;font-weight:600;color:var(--dark);margin-bottom:.45rem" data-en="Enter the CAPTCHA code" data-mr="CAPTCHA कोड प्रविष्ट करा">Enter the CAPTCHA code</div>
+    <div class="captcha-row">
+      <div class="captcha-box" id="captchaDisplay"></div>
+      <button class="refresh-cap" onclick="genCaptcha()" title="Refresh">🔄</button>
+      <input class="captcha-inp" id="captchaInp" placeholder="Type code" type="text" autocomplete="off">
+    </div>
+    <button class="login-btn" onclick="adminLogin()" data-en="Login to Dashboard →" data-mr="डॅशबोर्डवर लॉगिन करा →">Login to Dashboard →</button>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="admin-wrap" id="adminWrap">
+  <div class="admin-modal">
+    <div class="admin-hd">
+      <h2>⚙️ Admin Dashboard — FungiCure Pro</h2>
+      <div class="admin-hd-right">
+        <span style="font-size:.72rem;color:#94a3b8">Logged in as <strong style="color:#a7f3d0">owner</strong></span>
+        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+        <button class="close-x" style="background:#1e293b;color:#fff" onclick="adminLogout()">✕</button>
+      </div>
+    </div>
+    <div class="admin-tabs">
+      <button class="a-tab active" onclick="showAdminTab('overview',this)">📊 Overview</button>
+      <button class="a-tab" onclick="showAdminTab('orders',this)">📦 Orders</button>
+      <button class="a-tab" onclick="showAdminTab('reviews',this)">⭐ Reviews</button>
+      <button class="a-tab" onclick="showAdminTab('products',this)">🧴 Products</button>
+      <button class="a-tab" onclick="showAdminTab('careers',this)">💼 Applications</button>
+      <button class="a-tab" onclick="showAdminTab('weekly',this)">📅 Weekly</button>
+      <button class="a-tab" onclick="showAdminTab('monthly',this)">📆 Monthly</button>
+    </div>
+    <div class="admin-body" id="adminBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const ADMIN_USER='admin',ADMIN_PASS='fungicure2026';
+let captchaCode='',isAdminLoggedIn=false,currentLang='en',zoomLevel=1;
+let selectedRating=0,cart={},allReviews=[],adminOrders=[
+  {id:'FCP-A8X2',customer:'Ramesh K.',city:'Delhi',product:'Triple Pack',qty:1,total:1100,status:'paid',date:'26 Jun 2026'},
+  {id:'FCP-B3Y7',customer:'Priya S.',city:'Mumbai',product:'Single Bottle',qty:2,total:800,status:'unpaid',date:'25 Jun 2026'},
+  {id:'FCP-C9Z1',customer:'Arjun V.',city:'Pune',product:'Double Pack',qty:1,total:750,status:'paid',date:'24 Jun 2026'},
+  {id:'FCP-D4W5',customer:'Sunita M.',city:'Chennai',product:'Triple Pack',qty:2,total:2200,status:'paid',date:'23 Jun 2026'},
+  {id:'FCP-E7K3',customer:'Vikram B.',city:'Hyderabad',product:'Single Bottle',qty:1,total:400,status:'unpaid',date:'22 Jun 2026'}
+];
+let applications=[];
+
+const products=[
+  {id:1,name:'Single Bottle',nameMR:'एकच बाटली',desc:'Best for small/localized infections. 3–5 bottles recommended.',descMR:'लहान/स्थानिक संसर्गासाठी सर्वोत्तम. ३–५ बाटल्या शिफारस केलेल्या.',price:400,oldPrice:500,bottles:1,badge:'Popular',badgeMR:'लोकप्रिय',emoji:'🧴'},
+  {id:2,name:'Double Pack (2 Bottles)',nameMR:'डबल पॅक (२ बाटल्या)',desc:'For moderate infections on limbs. Great value for half-body treatment.',descMR:'अंगांवरील मध्यम संसर्गासाठी. अर्ध्या शरीराच्या उपचारासाठी उत्तम मूल्य.',price:750,oldPrice:1000,bottles:2,badge:'Save ₹50',badgeMR:'₹५० बचत',emoji:'🧴'},
+  {id:3,name:'Triple Pack (3 Bottles)',nameMR:'ट्रिपल पॅक (३ बाटल्या)',desc:'Best value. Full-body coverage and complete treatment course.',descMR:'सर्वोत्तम मूल्य. संपूर्ण शरीर आणि पूर्ण उपचार कोर्स.',price:1100,oldPrice:1500,bottles:3,badge:'Best Value',badgeMR:'सर्वोत्तम मूल्य',emoji:'🧴'}
+];
+
+const faqs_en=[
+  {q:'How long does it take to see results?',a:'Most customers notice significant relief from itching and redness within 3–5 days. Complete healing occurs within the full treatment course.'},
+  {q:'Is it safe for all skin types?',a:'Yes, FungiCure Pro uses 100% Ayurvedic, natural ingredients safe for all skin types. Avoid contact with eyes.'},
+  {q:'Can children below 12 years use this medicine?',a:'No. This product is NOT recommended for children under 12 years of age. Please consult a qualified healthcare professional or dermatologist before using any medication on children. A doctor will advise the correct and safe treatment.'},
+  {q:'How many bottles do I need?',a:'Depends on the affected area. Full body: 10–12 bottles. Half body: 6–7 bottles. Small local area: 3–5 bottles.'},
+  {q:'Is delivery free?',a:'Yes! Delivery is completely FREE across all of India. Orders are dispatched within 1–2 business days.'},
+  {q:'Do you have a return policy?',a:'We do not offer returns or refunds. Please read the product description carefully before purchasing.'},
+  {q:'What payment methods do you accept?',a:'We accept UPI payments (Google Pay, PhonePe, Paytm, etc.). Pay after placing your order via UPI.'}
+];
+
+const faqs_mr=[
+  {q:'परिणाम दिसण्यास किती वेळ लागतो?',a:'बहुतेक ग्राहकांना ३–५ दिवसांत खाज आणि लालसरपणापासून लक्षणीय आराम मिळतो. संपूर्ण उपचार कोर्समध्ये पूर्ण बरे होते.'},
+  {q:'हे सर्व त्वचा प्रकारांसाठी सुरक्षित आहे का?',a:'होय, फंगीक्युअर प्रो १००% आयुर्वेदिक, नैसर्गिक घटक वापरतो जे सर्व त्वचा प्रकारांसाठी सुरक्षित आहेत. डोळ्यांशी संपर्क टाळा.'},
+  {q:'१२ वर्षांखालील मुले हे औषध घेऊ शकतात का?',a:'नाही. हे उत्पादन १२ वर्षांखालील मुलांसाठी शिफारस केलेले नाही. मुलांवर कोणतेही औषध वापरण्यापूर्वी कृपया पात्र आरोग्य व्यावसायिक किंवा त्वचारोगतज्ज्ञाशी सल्लामसलत करा.'},
+  {q:'मला किती बाटल्या लागतील?',a:'प्रभावित क्षेत्रावर अवलंबून आहे. संपूर्ण शरीर: १०–१२ बाटल्या. अर्धे शरीर: ६–७ बाटल्या. लहान स्थानिक क्षेत्र: ३–५ बाटल्या.'},
+  {q:'डिलिव्हरी मोफत आहे का?',a:'होय! भारतभर डिलिव्हरी पूर्णपणे मोफत आहे. ऑर्डर १–२ कामकाजाच्या दिवसांत पाठवल्या जातात.'},
+  {q:'तुमचे परतावा धोरण काय आहे?',a:'आम्ही परतावा किंवा रिफंड देत नाही. कृपया खरेदीपूर्वी उत्पादनाचे वर्णन काळजीपूर्वक वाचा.'},
+  {q:'तुम्ही कोणत्या पेमेंट पद्धती स्वीकारता?',a:'आम्ही UPI पेमेंट स्वीकारतो (Google Pay, PhonePe, Paytm इ.). ऑर्डर दिल्यानंतर UPI द्वारे पेमेंट करा.'}
+];
+
+function changeZoom(delta){
+  zoomLevel=Math.min(Math.max(zoomLevel+delta,.7),1.5);
+  document.documentElement.style.fontSize=(zoomLevel*16)+'px';
+  document.getElementById('zoomLabel').textContent=Math.round(zoomLevel*100)+'%';
+}
+
+function setLang(lang){
+  currentLang=lang;
+  document.getElementById('btnEN').classList.toggle('active',lang==='en');
+  document.getElementById('btnMR').classList.toggle('active',lang==='mr');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.textContent=lang==='mr'?(el.getAttribute('data-mr')||el.getAttribute('data-en')):el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el=>{
+    el.placeholder=lang==='mr'?(el.getAttribute('data-mr-ph')||el.getAttribute('data-en-ph')):el.getAttribute('data-en-ph');
+  });
+  renderFaqs();
+  renderProducts();
+}
+
+function genCaptcha(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  captchaCode=Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');
+  const el=document.getElementById('captchaDisplay');
+  if(el) el.textContent=captchaCode;
+  const inp=document.getElementById('captchaInp');
+  if(inp) inp.value='';
+}
+
+function openAdminLogin(){
+  document.getElementById('adminLoginWrap').classList.add('open');
+  document.getElementById('adminUser').value='';
+  document.getElementById('adminPass').value='';
+  document.getElementById('loginErr').style.display='none';
+  genCaptcha();
+}
+function closeAdminLogin(){document.getElementById('adminLoginWrap').classList.remove('open');}
+
+function adminLogin(){
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPass').value.trim();
+  const c=document.getElementById('captchaInp').value.trim().toUpperCase();
+  if(u===ADMIN_USER&&p===ADMIN_PASS&&c===captchaCode){
+    isAdminLoggedIn=true;
+    closeAdminLogin();
+    document.getElementById('adminWrap').classList.add('open');
+    showAdminTab('overview',document.querySelector('.a-tab'));
+    showToast('✅ Welcome, Owner!');
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    genCaptcha();
+  }
+}
+function adminLogout(){isAdminLoggedIn=false;document.getElementById('adminWrap').classList.remove('open');showToast('Logged out.');}
+
+function bottleSVG(){
+  return`<svg class="bottle-svg" viewBox="0 0 60 120" xmlns="http://www.w3.org/2000/svg">
+    <rect x="18" y="0" width="24" height="12" rx="4" fill="#d1fae5" stroke="#0F766E" stroke-width="1.5"/>
+    <rect x="10" y="12" width="40" height="7" rx="3" fill="#0F766E"/>
+    <rect x="8" y="19" width="44" height="80" rx="10" fill="white" stroke="#0F766E" stroke-width="2"/>
+    <rect x="13" y="28" width="34" height="52" rx="6" fill="#e6fffa" stroke="#14B8A6" stroke-width="1"/>
+    <text x="30" y="44" text-anchor="middle" font-size="5" font-weight="700" fill="#0F766E" font-family="sans-serif">FungiCure</text>
+    <text x="30" y="52" text-anchor="middle" font-size="4.5" fill="#0F766E" font-family="sans-serif">Pro</text>
+    <ellipse cx="21" cy="62" rx="6" ry="7" fill="#fecdd3" stroke="#f87171" stroke-width=".8"/>
+    <ellipse cx="37" cy="64" rx="5" ry="6" fill="#fecdd3" stroke="#f87171" stroke-width=".8"/>
+    <text x="30" y="79" text-anchor="middle" font-size="3.5" fill="#064e3b" font-family="sans-serif">Anti-Fungal</text>
+    <text x="30" y="84" text-anchor="middle" font-size="3.5" fill="#064e3b" font-family="sans-serif">Ayurvedic</text>
+    <rect x="8" y="97" width="44" height="5" rx="0" fill="#0F766E" opacity=".15"/>
+  </svg>`;
+}
+
+function renderProducts(){
+  const g=document.getElementById('prodGrid');
+  if(!g) return;
+  g.innerHTML=products.map(p=>{
+    const nm=currentLang==='mr'?p.nameMR:p.name;
+    const dc=currentLang==='mr'?p.descMR:p.desc;
+    const bg=currentLang==='mr'?p.badgeMR:p.badge;
+    let b='';for(let i=0;i<p.bottles;i++) b+=bottleSVG();
+    return`<div class="prod-card reveal visible">
+      <div class="prod-img">
+        <span class="prod-badge">${bg}</span>
+        <span class="free-ship">${currentLang==='mr'?'🚚 मोफत डिलिव्हरी':'🚚 Free Delivery'}</span>
+        <div class="bottle-wrap">${b}</div>
+      </div>
+      <div class="prod-info">
+        <div class="prod-name">${nm}</div>
+        <div class="prod-desc">${dc}</div>
+        <div class="prod-price">₹${p.price.toLocaleString('en-IN')} <s>₹${p.oldPrice.toLocaleString('en-IN')}</s></div>
+        <button class="add-btn" onclick="addToCart(${p.id})">${currentLang==='mr'?'🛒 कार्टमध्ये जोडा':'🛒 Add to Cart'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderReviews(){
+  const shown=allReviews.slice(0,3);
+  const extra=allReviews.length-3;
+  const el=document.getElementById('reviewsList');
+  const note=document.getElementById('moreRevNote');
+  if(!el) return;
+  if(!shown.length){
+    el.innerHTML=`<div style="text-align:center;color:var(--gray);font-size:.88rem;padding:2rem">${currentLang==='mr'?'अद्याप कोणतीही समीक्षा नाही. पहिली समीक्षा करणारे व्हा!':'No reviews yet. Be the first to review!'}</div>`;
+    if(note) note.style.display='none';return;
+  }
+  el.innerHTML=shown.map(r=>{
+    const ini=r.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    return`<div class="rev-card">
+      <div class="rev-top"><div class="rev-avatar">${ini}</div><div><div class="rev-name">${r.name}</div><div class="rev-loc">📍 ${r.loc}</div></div></div>
+      <div class="rev-stars">${stars} (${r.rating}/5)</div>
+      <p class="rev-text">"${r.text}"</p>
+      <div class="rev-date">🗓 ${r.date}</div>
+    </div>`;
+  }).join('');
+  if(note){
+    if(extra>0){note.style.display='block';document.getElementById('moreRevCount').textContent=extra;}
+    else note.style.display='none';
+  }
+}
+
+function renderFaqs(){
+  const faqs=currentLang==='mr'?faqs_mr:faqs_en;
+  const el=document.getElementById('faqList');
+  if(!el) return;
+  el.innerHTML=faqs.map((f,i)=>`
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(${i})">${f.q} <span id="fa${i}">▼</span></button>
+      <div class="faq-a" id="fd${i}">${f.a}</div>
+    </div>`).join('');
+}
+
+function toggleFaq(i){
+  const a=document.getElementById('fd'+i);
+  const ar=document.getElementById('fa'+i);
+  if(!a) return;
+  a.classList.toggle('open');
+  ar.textContent=a.classList.contains('open')?'▲':'▼';
+}
+
+function setRating(n){
+  selectedRating=n;
+  document.querySelectorAll('#starPick span').forEach((s,i)=>s.classList.toggle('active',i<n));
+}
+
+function submitReview(){
+  const name=document.getElementById('revName').value.trim();
+  const loc=document.getElementById('revLoc').value.trim();
+  const text=document.getElementById('revText').value.trim();
+  if(!name||!loc||!text||!selectedRating){showToast(currentLang==='mr'?'⚠️ कृपया सर्व फील्ड भरा':'⚠️ Please fill all fields and select a rating');return;}
+  const d=new Date();
+  const ds=d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getFullYear();
+  allReviews.unshift({name,loc,rating:selectedRating,text,date:ds});
+  renderReviews();
+  document.getElementById('revName').value='';
+  document.getElementById('revLoc').value='';
+  document.getElementById('revText').value='';
+  selectedRating=0;
+  document.querySelectorAll('#starPick span').forEach(s=>s.classList.remove('active'));
+  showToast(currentLang==='mr'?'✅ समीक्षा सबमिट! धन्यवाद.':'✅ Review submitted! Thank you.');
+}
+
+function openApply(role){
+  document.getElementById('applyTitle').textContent=(currentLang==='mr'?'अर्ज करा — ':'Apply Now — ')+role;
+  document.getElementById('applyModal').classList.add('open');
+}
+
+function submitApplication(){
+  applications.push({role:document.getElementById('applyTitle').textContent,date:new Date().toLocaleDateString()});
+  document.getElementById('applyModal').classList.remove('open');
+  showToast('✅ Application submitted! We will contact you.');
+}
+
+function addToCart(id){
+  const p=products.find(x=>x.id===id);
+  if(cart[id]) cart[id].qty++;
+  else cart[id]={...p,qty:1};
+  updateCartCount();
+  showToast(currentLang==='mr'?'✅ कार्टमध्ये जोडले!':'✅ Added to cart!');
+}
+
+function updateCartCount(){
+  document.getElementById('cartCount').textContent=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+}
+
+function openCart(){
+  document.getElementById('cartSide').classList.add('open');
+  document.getElementById('overlay').classList.add('active');
+  renderCart();
+}
+function closeCart(){
+  document.getElementById('cartSide').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+function renderCart(){
+  const items=Object.values(cart);
+  const el=document.getElementById('cartItemsArea');
+  const ft=document.getElementById('cartFt');
+  if(!items.length){
+    el.innerHTML=`<div class="empty-cart">🛒<br><br>${currentLang==='mr'?'तुमची कार्ट रिकामी आहे':'Your cart is empty'}</div>`;
+    ft.style.display='none';return;
+  }
+  el.innerHTML=items.map(item=>`
+    <div class="c-item">
+      <div class="c-item-img">${item.emoji}</div>
+      <div class="c-item-info">
+        <div class="c-item-name">${currentLang==='mr'?item.nameMR:item.name}</div>
+        <div class="c-item-price">₹${item.price.toLocaleString('en-IN')}</div>
+        <div class="qty-row">
+          <button class="qty-b" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-n">${item.qty}</span>
+          <button class="qty-b" onclick="changeQty(${item.id},1)">+</button>
+          <button class="rm-btn" onclick="removeItem(${item.id})">${currentLang==='mr'?'काढा':'Remove'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('cartTotal').textContent='₹'+total.toLocaleString('en-IN');
+  ft.style.display='block';
+}
+
+function changeQty(id,d){
+  if(!cart[id])return;
+  cart[id].qty+=d;
+  if(cart[id].qty<=0) delete cart[id];
+  updateCartCount();renderCart();
+}
+function removeItem(id){delete cart[id];updateCartCount();renderCart();}
+
+function openCheckout(){
+  const total=Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('modalTotal').textContent='₹'+total.toLocaleString('en-IN');
+  document.getElementById('checkoutModal').classList.add('open');
+  closeCart();
+}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
+
+function placeOrder(){
+  const fn=document.getElementById('fname').value.trim();
+  const ph=document.getElementById('phone').value.trim();
+  const ad=document.getElementById('address').value.trim();
+  const ci=document.getElementById('city').value.trim();
+  if(!fn||!ph||!ad){showToast(currentLang==='mr'?'⚠️ कृपया नाव, फोन आणि पत्ता भरा':'⚠️ Please fill name, phone & address');return;}
+  const oid='FCP-'+Math.random().toString(36).substr(2,6).toUpperCase();
+  const items=Object.values(cart);
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  adminOrders.unshift({
+    id:oid,customer:fn+' '+(document.getElementById('lname').value||''),
+    city:ci||'N/A',product:items.map(i=>i.name).join(', '),
+    qty:items.reduce((s,i)=>s+i.qty,0),total,status:'unpaid',
+    date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})
+  });
+  document.getElementById('orderIdBox').textContent='Order ID: '+oid;
+  closeCheckout();
+  document.getElementById('successModal').classList.add('open');
+  cart={};updateCartCount();
+}
+
+function showAdminTab(tab,btn){
+  if(!isAdminLoggedIn) return;
+  document.querySelectorAll('.a-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const body=document.getElementById('adminBody');
+  const tot=adminOrders.reduce((s,o)=>s+o.total,0);
+  const paid=adminOrders.filter(o=>o.status==='paid');
+  const unpaid=adminOrders.filter(o=>o.status==='unpaid');
+
+  if(tab==='overview'){
+    body.innerHTML=`
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total Orders</div><div class="kpi-val">${adminOrders.length}</div><div class="kpi-sub">All time</div></div>
+        <div class="kpi"><div class="kpi-label">Revenue</div><div class="kpi-val">₹${tot.toLocaleString('en-IN')}</div></div>
+        <div class="kpi"><div class="kpi-label">Paid</div><div class="kpi-val">${paid.length}</div><div class="kpi-sub" style="color:#16a34a">Confirmed</div></div>
+        <div class="kpi"><div class="kpi-label">Unpaid</div><div class="kpi-val">${unpaid.length}</div><div class="kpi-sub" style="color:#dc2626">Pending</div></div>
+        <div class="kpi"><div class="kpi-label">Reviews</div><div class="kpi-val">${allReviews.length}</div></div>
+        <div class="kpi"><div class="kpi-label">Applications</div><div class="kpi-val">${applications.length}</div></div>
+      </div>
+      <div class="chart-area"><h4>Revenue — Last 7 Days</h4><div style="position:relative;height:150px"><canvas id="revChart"></canvas></div></div>
+      <div class="prod-sales">
+        ${products.map((p,i)=>{const s=[8,5,3][i];return`<div class="ps-card"><div style="font-size:1.4rem">${p.emoji}</div><div><div class="ps-name">${p.name}</div><div class="ps-count">${s} orders</div><div class="ps-bar-wrap"><div class="ps-bar" style="width:${Math.round((s/8)*100)}%"></div></div></div></div>`;}).join('')}
+      </div>`;
+    setTimeout(()=>{const ctx=document.getElementById('revChart');if(ctx) new Chart(ctx,{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Revenue ₹',data:[1200,850,1550,400,2100,750,1100],backgroundColor:'#0F766E',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});},100);
+
+  } else if(tab==='orders'){
+    body.innerHTML=`<div style="overflow-x:auto"><table class="orders-table"><thead><tr><th>Order ID</th><th>Customer</th><th>City</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="ordersBody"></tbody></table></div>`;
+    renderOrdersBody();
+
+  } else if(tab==='reviews'){
+    body.innerHTML=`<div style="margin-bottom:.9rem;font-size:.85rem;color:var(--gray)">Total reviews: <strong>${allReviews.length}</strong> — Only first 3 shown publicly on website.</div><div id="adminReviewsList"></div>${allReviews.length===0?'<div style="text-align:center;padding:2rem;color:var(--gray)">No reviews yet.</div>':''}`;
+    renderAdminReviews();
+
+  } else if(tab==='products'){
+    body.innerHTML=`<div class="kpi-row">${products.map((p,i)=>{const s=[8,5,3][i];return`<div class="kpi"><div class="kpi-label">${p.name}</div><div class="kpi-val">${s}</div><div class="kpi-sub">Units sold</div></div>`;}).join('')}</div><div class="chart-area"><h4>Product Sales</h4><div style="position:relative;height:150px"><canvas id="prodChart"></canvas></div></div>`;
+    setTimeout(()=>{const ctx=document.getElementById('prodChart');if(ctx) new Chart(ctx,{type:'bar',data:{labels:products.map(p=>p.name),datasets:[{label:'Sold',data:[8,5,3],backgroundColor:['#0F766E','#14B8A6','#22C55E'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});},100);
+
+  } else if(tab==='careers'){
+    const roles=['Data Analyst Intern','Backend Developer Intern','Customer Service Executive'];
+    body.innerHTML=`<div style="font-size:.85rem;color:var(--gray);margin-bottom:1rem">Total applications: <strong>${applications.length}</strong></div>`+
+    roles.map(r=>{
+      const count=applications.filter(a=>a.role.includes(r)).length;
+      return`<div class="job-admin-card"><div><div class="job-admin-title">${r}</div><div class="job-admin-sub">Work From Home · Open</div></div><span class="job-admin-count">${count} applicant${count!==1?'s':''}</span></div>`;
+    }).join('')+
+    (applications.length?`<div style="margin-top:1.2rem"><h4 style="font-size:.88rem;font-weight:700;color:var(--dark);margin-bottom:.7rem">Recent Applications</h4>${applications.slice(0,10).map(a=>`<div style="background:#fff;border:1px solid var(--light);border-radius:8px;padding:.7rem .9rem;margin-bottom:.5rem;font-size:.82rem"><strong>${a.role}</strong><span style="float:right;color:var(--gray)">${a.date}</span></div>`).join('')}</div>`:'<div style="text-align:center;padding:2rem;color:var(--gray);font-size:.85rem">No applications yet.</div>');
+
+  } else if(tab==='weekly'){
+    const wd=[1200,850,1550,400,2100,750,1100];
+    const wt=wd.reduce((a,b)=>a+b,0);
+    body.innerHTML=`<div class="kpi-row"><div class="kpi"><div class="kpi-label">Week Revenue</div><div class="kpi-val">₹${wt.toLocaleString('en-IN')}</div></div><div class="kpi"><div class="kpi-label">Orders</div><div class="kpi-val">14</div></div><div class="kpi"><div class="kpi-label">Avg Order</div><div class="kpi-val">₹${Math.round(wt/14).toLocaleString('en-IN')}</div></div><div class="kpi"><div class="kpi-label">Best Day</div><div class="kpi-val">Friday</div></div></div><div class="chart-area"><h4>Weekly Revenue</h4><div style="position:relative;height:150px"><canvas id="wkChart"></canvas></div></div>`;
+    setTimeout(()=>{const ctx=document.getElementById('wkChart');if(ctx) new Chart(ctx,{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'₹',data:wd,borderColor:'#0F766E',backgroundColor:'rgba(15,118,110,.1)',borderWidth:2,pointBackgroundColor:'#0F766E',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});},100);
+
+  } else if(tab==='monthly'){
+    const md=[4200,6800,5100,9200,7400,8950];
+    const mt=md.reduce((a,b)=>a+b,0);
+    body.innerHTML=`<div class="kpi-row"><div class="kpi"><div class="kpi-label">6-Month Revenue</div><div class="kpi-val">₹${mt.toLocaleString('en-IN')}</div></div><div class="kpi"><div class="kpi-label">Best Month</div><div class="kpi-val">April</div></div><div class="kpi"><div class="kpi-label">Total Orders</div><div class="kpi-val">86</div></div><div class="kpi"><div class="kpi-label">Growth</div><div class="kpi-val" style="color:#16a34a">+20.9%</div></div></div><div class="chart-area"><h4>Monthly Revenue (Jan–Jun 2026)</h4><div style="position:relative;height:160px"><canvas id="mnChart"></canvas></div></div>`;
+    setTimeout(()=>{const ctx=document.getElementById('mnChart');if(ctx) new Chart(ctx,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'₹',data:md,backgroundColor:['#9FE1CB','#9FE1CB','#9FE1CB','#0F766E','#9FE1CB','#9FE1CB'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v},grid:{color:'#f1f5f9'}},x:{grid:{display:false}}}}});},100);
+  }
+}
+
+function renderOrdersBody(){
+  const tb=document.getElementById('ordersBody');
+  if(!tb) return;
+  tb.innerHTML=adminOrders.map((o,i)=>`
+    <tr>
+      <td style="font-weight:700;color:var(--p)">${o.id}</td>
+      <td>${o.customer}</td><td>${o.city}</td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.product}</td>
+      <td>${o.qty}</td>
+      <td style="font-weight:700">₹${o.total.toLocaleString('en-IN')}</td>
+      <td><span class="status-badge ${o.status}" onclick="toggleOrderStatus(${i})">${o.status==='paid'?'✅ Paid':'⏳ Unpaid'}</span></td>
+      <td>${o.date}</td>
+    </tr>`).join('');
+}
+
+function toggleOrderStatus(i){
+  adminOrders[i].status=adminOrders[i].status==='paid'?'unpaid':'paid';
+  renderOrdersBody();showToast('Status updated.');
+}
+
+function renderAdminReviews(){
+  const el=document.getElementById('adminReviewsList');
+  if(!el||!allReviews.length) return;
+  el.innerHTML=allReviews.map((r,i)=>{
+    const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    return`<div class="admin-rev-card">
+      <div class="admin-rev-hd">
+        <div>
+          <div class="admin-rev-name">${r.name} <span style="font-size:.7rem;color:var(--gray)">— 📍 ${r.loc}</span></div>
+          <div class="admin-rev-stars">${stars} &nbsp;${i<3?'<span style="background:#dcfce7;color:#166534;font-size:.66rem;padding:.1rem .4rem;border-radius:50px;font-weight:700">✅ Public</span>':'<span style="background:#fef3c7;color:#92400e;font-size:.66rem;padding:.1rem .4rem;border-radius:50px;font-weight:700">⚠️ Admin only</span>'}</div>
+          <div style="font-size:.7rem;color:var(--gray)">${r.date}</div>
+        </div>
+        <button class="del-rev-btn" onclick="deleteReview(${i})">🗑 Delete</button>
+      </div>
+      <div class="admin-rev-text">"${r.text}"</div>
+    </div>`;
+  }).join('');
+}
+
+function deleteReview(i){
+  allReviews.splice(i,1);
+  renderReviews();renderAdminReviews();showToast('Review deleted.');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('mob-open');}
+function closeMenu(){document.getElementById('navLinks').classList.remove('mob-open');}
+
+// SCROLL REVEAL
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+},{threshold:.12});
+function initReveal(){
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+}
+
+renderProducts();
+renderReviews();
+renderFaqs();
+genCaptcha();
+setTimeout(initReveal,100);
+</script>
